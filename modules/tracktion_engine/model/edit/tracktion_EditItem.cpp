@@ -302,6 +302,40 @@ struct IDRemapping
             {
                 v.setProperty (propName, remapIDList (v.getProperty (propName), newIDsToApply), um);
             }
+            else if (propName == IDs::parameterIDs)
+            {
+                auto propValue = v.getProperty (propName).toString();
+
+                if (propValue.isNotEmpty())
+                {
+                    auto paramIDs = StringArray::fromTokens (propValue, "|", "");
+                    for (auto i = 0; i < paramIDs.size(); ++i)
+                    {
+                        auto paramID = paramIDs[i];
+                        auto split = StringArray::fromTokens (paramID, "_", "");
+                        if (split.size() > 1) {
+                            auto newID = newIDsToApply.find (split[1]);
+
+                            if (newID != newIDsToApply.end())
+                                split.set (1, newID->second.toString());
+                            else
+                                DBG ("Dangling ID found: " << split[1]);
+
+                            paramID = split.joinIntoString ("_");
+                        } else {
+                            auto newID = newIDsToApply.find (paramID);
+
+                            if (newID != newIDsToApply.end())
+                                paramID = newID->second.toString();
+                            else
+                                DBG ("Dangling ID found: " << paramID);
+                        }
+                        paramIDs.set (i, paramID);
+                    }
+                    propValue = paramIDs.joinIntoString ("|");
+                    v.setProperty (propName, propValue, um);
+                }
+            }
 
             if (EditItemID::applyNewIDsToExternalValueTree)
                 EditItemID::applyNewIDsToExternalValueTree (v, propName, newIDsToApply, um);
