@@ -30,8 +30,9 @@ public:
     const juce::NormalisableRange<float> valueRange;
     AutomatableEditItem& automatableEditElement;
 
-    juce::Range<float> getValueRange() const               { return valueRange.getRange(); }
-    Plugin* getPlugin() const                              { return plugin; }
+    juce::Range<float> getValueRange() const                    { return valueRange.getRange(); }
+    juce::NormalisableRange<float> getNormalisableRange() const { return valueRange; }
+    Plugin* getPlugin() const                                   { return plugin; }
 
     Engine& getEngine() const noexcept;
     Edit& getEdit() const noexcept;
