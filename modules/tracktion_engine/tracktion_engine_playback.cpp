@@ -58,6 +58,7 @@ using namespace juce;
 #include "playback/tracktion_tests_TransportControl.cpp"
 #include "playback/tracktion_TransportControl.cpp"
 #include "playback/tracktion_AbletonLink.cpp"
+#include "playback/tracktion_AbletonLinkTransport.cpp"
 
 #include "playback/tracktion_MPEStartTrimmer.h"
 

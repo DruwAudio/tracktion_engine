@@ -508,6 +508,8 @@ void EditPlaybackContext::prepareOutputDevices (double start)
     double sampleRate = dm.getSampleRate();
     int blockSize = dm.getBlockSize();
 
+    abletonLinkTransport.prepareToPlay(sampleRate, blockSize);
+
     start = playhead.streamTimeToSourceTime (start);
 
     for (auto wo : waveOutputs)
@@ -687,6 +689,10 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
         lastStreamPos = streamPos;
     }
 
+    abletonLinkTransport.update();
+
+
+
     edit.updateModifierTimers (playhead, streamTime, numSamples);
     midiDispatcher.nextBlockStarted (playhead, streamTime, numSamples);
 
@@ -696,6 +702,7 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
     for (auto wo : waveOutputs)
         wo->fillNextAudioBlock (playhead, streamTime, allChannels, numSamples);
 }
+
 
 InputDeviceInstance* EditPlaybackContext::getInputFor (InputDevice* d) const
 {

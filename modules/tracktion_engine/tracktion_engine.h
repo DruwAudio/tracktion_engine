@@ -234,6 +234,7 @@ namespace tracktion_engine
     class MarkerManager;
     class TransportControl;
     class AbletonLink;
+    class AbletonLinkTransport;
     class ParameterControlMappings;
     class ParameterChangeHandler;
     class AutomationRecordManager;
@@ -402,6 +403,7 @@ namespace tracktion_engine
 
 #include "playback/tracktion_TransportControl.h"
 #include "playback/tracktion_AbletonLink.h"
+#include "playback/tracktion_AbletonLinkTransport.h"
 
 #include "control_surfaces/tracktion_ControlSurface.h"
 #include "control_surfaces/tracktion_ExternalController.h"

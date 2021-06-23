@@ -111,6 +111,12 @@ private:
     bool hasSynced = false;
     double lastStreamPos = 0;
 
+
+#pragma mark - AbletonLinkTransport
+
+    AbletonLinkTransport abletonLinkTransport;
+
+
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)
 };
