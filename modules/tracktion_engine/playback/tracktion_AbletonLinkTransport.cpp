@@ -10,10 +10,12 @@ namespace tracktion_engine
     }
 
 
-    void AbletonLinkTransport::prepareToPlay(double newsampleRate, int newblockSize)
+    void AbletonLinkTransport::prepareToPlay(double newsampleRate, int newblockSize, double inOutLatencyMs)
     {
         sampleRate = newsampleRate;
         numSamples = newblockSize;
+        out_latency_us =  std::chrono::microseconds{ std::llround(1.0e3 * inOutLatencyMs) };
+
     }
 
     void AbletonLinkTransport::update()

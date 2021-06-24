@@ -507,8 +507,9 @@ void EditPlaybackContext::prepareOutputDevices (double start)
     auto& dm = edit.engine.getDeviceManager();
     double sampleRate = dm.getSampleRate();
     int blockSize = dm.getBlockSize();
+    double inputOutputLatency = dm.getRecordAdjustmentMs();
+    abletonLinkTransport.prepareToPlay(sampleRate, blockSize, inputOutputLatency);
 
-    abletonLinkTransport.prepareToPlay(sampleRate, blockSize);
 
     start = playhead.streamTimeToSourceTime (start);
 

@@ -11,7 +11,7 @@ public:
     double currentBpm = 60;
 
 
-    void prepareToPlay(double newsampleRate, int newblockSize);
+    void prepareToPlay(double newsampleRate, int newblockSize, double inOutLatencyMs);
     void update();
 
     /** Data that's passed around between thread */
