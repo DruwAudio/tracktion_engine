@@ -18,7 +18,7 @@ namespace tracktion_engine
 
     }
 
-    void AbletonLinkTransport::update()
+    double AbletonLinkTransport::update()
     {
         calculate_output_time(sampleRate, numSamples );
 
@@ -28,10 +28,12 @@ namespace tracktion_engine
 
         // did we just start a new bar?
         auto wrapIndex = getBarPhaseWrapIndex(sampleRate, engine_data.quantum, numSamples);
-        if (wrapIndex > -1)
-            DBG("LINK: New Bar ");
+//        if (wrapIndex > -1)
+//            DBG("LINK: New Bar ");
 
         sample_time += numSamples  ;
+
+        return session->phaseAtTime(output_time, beat_length);
     }
 
     void AbletonLinkTransport::initLink()

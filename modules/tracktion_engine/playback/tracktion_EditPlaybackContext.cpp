@@ -623,6 +623,11 @@ Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
     return allInputs;
 }
 
+static inline double negativeAwareFmod (double a, double b)
+{
+    return a - b * std::floor (a / b);
+}
+
 void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** allChannels, int numSamples)
 {
     CRASH_TRACER
@@ -690,7 +695,16 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
         lastStreamPos = streamPos;
     }
 
-    abletonLinkTransport.update();
+    // adjust playhead to link
+    const double linkBeatPhase = abletonLinkTransport.update();
+    const double bps = transport.edit.tempoSequence.getBeatsPerSecondAt (playhead.getPosition());
+    const double currentPosBeats = transport.edit.tempoSequence.timeToBeats (playhead.getPosition());
+    const double localBeatPhase = negativeAwareFmod (currentPosBeats, 1.) ;
+    double offset = (linkBeatPhase - localBeatPhase);
+    if (std::abs (offset) >  0.5)
+        offset = offset > 0 ? offset - 1.0 : 1.0 + offset;
+
+    playhead.setPosition( transport.edit.tempoSequence.beatsToTime(currentPosBeats + offset));
 
 
 

@@ -12,7 +12,9 @@ public:
 
 
     void prepareToPlay(double newsampleRate, int newblockSize, double inOutLatencyMs);
-    void update();
+
+    /** update Link's output-time and return beat phase */
+    double update();
 
     /** Data that's passed around between thread */
     struct EngineData
