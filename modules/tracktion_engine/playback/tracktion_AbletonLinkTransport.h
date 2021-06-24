@@ -16,6 +16,8 @@ public:
     /** update Link's output-time and return beat phase */
     double update();
 
+    double getBpm();
+
     /** Data that's passed around between thread */
     struct EngineData
     {

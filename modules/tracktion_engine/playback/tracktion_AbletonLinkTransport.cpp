@@ -18,6 +18,11 @@ namespace tracktion_engine
 
     }
 
+    double AbletonLinkTransport::getBpm()
+    {
+        return currentBpm;
+    }
+
     double AbletonLinkTransport::update()
     {
         calculate_output_time(sampleRate, numSamples );
