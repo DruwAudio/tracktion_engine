@@ -704,10 +704,13 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
     if (std::abs (offset) >  0.5)
         offset = offset > 0 ? offset - 1.0 : 1.0 + offset;
 
-    if (offset > 0.01)
+    linkTimeSinceLastPlayheadUpdate += streamTime.getLength();
+    if (offset > 0.01 && (linkPlayheadUpdateInterval < linkTimeSinceLastPlayheadUpdate))
     {
         playhead.setPosition(transport.edit.tempoSequence.beatsToTime(currentPosBeats + offset));
+        linkTimeSinceLastPlayheadUpdate = 0;
     }
+
 
     // update local bpm
     auto localBpm = transport.edit.tempoSequence.getTempos()[0]->getBpm();

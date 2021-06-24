@@ -115,6 +115,8 @@ private:
 #pragma mark - AbletonLinkTransport
 
     AbletonLinkTransport abletonLinkTransport;
+    double linkPlayheadUpdateInterval = 0.5;
+    double linkTimeSinceLastPlayheadUpdate = 0;
 
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
