@@ -65,6 +65,7 @@ private :
     * Checks for quantum phase wrap.
     Returns the sample index on which the phase wrapped.
     Returns -1 if bar didnt wrap around.
+    I usually use this method while debugging, to play a click on the sample where a new bar happens.
     */
     int getBarPhaseWrapIndex(const double sample_rate, const double quantum, const int buffer_size);
 
