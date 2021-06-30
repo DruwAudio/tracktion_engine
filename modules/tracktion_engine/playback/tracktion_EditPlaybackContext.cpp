@@ -652,15 +652,17 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
     auto linkBpm = abletonLinkTransport.getBpm();
     if (localBpm != linkBpm)
     {
-        juce::MessageManager::getInstance()->callAsync ([this, linkBpm] () {
-            transport.edit.tempoSequence.getTempos()[0]->setBpm(linkBpm);
+        Edit::WeakRef weakEdit (&transport.edit);
+        juce::MessageManager::getInstance()->callAsync ([weakEdit , linkBpm] () {
+            if (weakEdit != nullptr)
+            {
+                weakEdit->tempoSequence.getTempos()[0]->setBpm(linkBpm);
+            }
         });
     }
 
     // adjust playhead to link
     const double linkBeatPhase = abletonLinkTransport.update();
-
-    const double bps = transport.edit.tempoSequence.getBeatsPerSecondAt (playhead.getPosition());
     const double currentPosBeats = transport.edit.tempoSequence.timeToBeats (playhead.getPosition());
     const double localBeatPhase = negativeAwareFmod (currentPosBeats, 1.) ;
 
@@ -674,9 +676,6 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
         auto newPosition = transport.edit.tempoSequence.beatsToTime(currentPosBeats + offset);
         playhead.setRollInToLoop (newPosition);
         linkTimeSinceLastPlayheadUpdate = 0;
-//        DBG("-----\n link phase " << linkBeatPhase);
-//        DBG(" local phase " << localBeatPhase);
-//        DBG("---------------------------------------------- PLAYHEAD ADJUST " << offset);
     }
 
 
