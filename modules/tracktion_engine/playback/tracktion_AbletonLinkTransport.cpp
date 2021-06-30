@@ -23,6 +23,17 @@ namespace tracktion_engine
         return currentBpm;
     }
 
+    double AbletonLinkTransport::getBeat()
+    {
+        return currentBeat;
+    }
+
+    double AbletonLinkTransport::getPhase()
+    {
+        return currentPhase;
+    }
+
+
     double AbletonLinkTransport::update()
     {
         calculate_output_time(sampleRate, numSamples );
@@ -50,6 +61,7 @@ namespace tracktion_engine
         link.reset(new ableton::Link{ currentBpm });
         link->setTempoCallback([this](const double newBpm) { currentBpm = newBpm; });
         link->enable(true);
+        shared_engine_data.request_start = true;
 
     }
 
@@ -113,6 +125,12 @@ namespace tracktion_engine
 
         if (engine_data.requested_bpm > 0) // Set the newly requested tempo from the beginning of this buffer.
             session->setTempo(engine_data.requested_bpm, output_time);
+
+        if (session->isPlaying())
+            currentBeat = session->beatAtTime(output_time, engine_data.quantum);
+
+        if (session->isPlaying())
+            currentPhase = session->phaseAtTime(output_time, engine_data.quantum);
 
         link->commitAudioSessionState(*session); // Timeline modifications are complete, commit the results
     }

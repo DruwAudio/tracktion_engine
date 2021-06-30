@@ -18,6 +18,10 @@ public:
 
     double getBpm();
 
+    double getBeat();
+
+    double getPhase();
+
     /** Data that's passed around between thread */
     struct EngineData
     {
@@ -51,6 +55,9 @@ private :
     ableton::link::HostTimeFilter<ableton::link::platform::Clock> host_time_filter;
     std::unique_ptr<ableton::Link::SessionState> session;
     static constexpr double beat_length = 1;
+
+    double currentBeat = 0;
+    double currentPhase = 0;
 
     EngineData shared_engine_data, lock_free_engine_data;
     std::mutex engine_data_guard;
