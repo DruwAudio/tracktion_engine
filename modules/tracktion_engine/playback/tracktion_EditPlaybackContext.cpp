@@ -646,6 +646,40 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
 
     playhead.deviceManagerPositionUpdate (streamTime.getStart(), streamTime.getEnd());
 
+
+    // update local bpm
+    auto localBpm = transport.edit.tempoSequence.getTempos()[0]->getBpm();
+    auto linkBpm = abletonLinkTransport.getBpm();
+    if (localBpm != linkBpm)
+    {
+        juce::MessageManager::getInstance()->callAsync ([this, linkBpm] () {
+            transport.edit.tempoSequence.getTempos()[0]->setBpm(linkBpm);
+        });
+    }
+
+    // adjust playhead to link
+    const double linkBeatPhase = abletonLinkTransport.update();
+
+    const double bps = transport.edit.tempoSequence.getBeatsPerSecondAt (playhead.getPosition());
+    const double currentPosBeats = transport.edit.tempoSequence.timeToBeats (playhead.getPosition());
+    const double localBeatPhase = negativeAwareFmod (currentPosBeats, 1.) ;
+
+    double offset = (linkBeatPhase - localBeatPhase);
+    if (std::abs (offset) >  0.5)
+        offset = offset > 0 ? offset - 1.0 : 1.0 + offset;
+
+    linkTimeSinceLastPlayheadUpdate += streamTime.getLength();
+    if (std::abs (offset) > 0.01 && (linkPlayheadUpdateInterval < linkTimeSinceLastPlayheadUpdate))
+    {
+        auto newPosition = transport.edit.tempoSequence.beatsToTime(currentPosBeats + offset);
+        playhead.setRollInToLoop (newPosition);
+        linkTimeSinceLastPlayheadUpdate = 0;
+//        DBG("-----\n link phase " << linkBeatPhase);
+//        DBG(" local phase " << localBeatPhase);
+//        DBG("---------------------------------------------- PLAYHEAD ADJUST " << offset);
+    }
+
+
     // sync this playback context with a master context
     if (contextToSyncTo != nullptr && playhead.isPlaying())
     {
@@ -695,36 +729,7 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
         lastStreamPos = streamPos;
     }
 
-    // update local bpm
-    auto localBpm = transport.edit.tempoSequence.getTempos()[0]->getBpm();
-    auto linkBpm = abletonLinkTransport.getBpm();
-    if (localBpm != linkBpm)
-    {
-        juce::MessageManager::getInstance()->callAsync ([this, linkBpm] () {
-            transport.edit.tempoSequence.getTempos()[0]->setBpm(linkBpm);
-        });
-    }
 
-    // adjust playhead to link
-    const double linkBeatPhase = abletonLinkTransport.update();
-
-    const double bps = transport.edit.tempoSequence.getBeatsPerSecondAt (playhead.getPosition());
-    const double currentPosBeats = transport.edit.tempoSequence.timeToBeats (playhead.getPosition());
-    const double localBeatPhase = negativeAwareFmod (currentPosBeats, 1.) ;
-
-    double offset = (linkBeatPhase - localBeatPhase);
-    if (std::abs (offset) >  0.5)
-        offset = offset > 0 ? offset - 1.0 : 1.0 + offset;
-
-    linkTimeSinceLastPlayheadUpdate += streamTime.getLength();
-    if (std::abs (offset) > 0.01 && (linkPlayheadUpdateInterval < linkTimeSinceLastPlayheadUpdate))
-    {
-        playhead.setPosition(transport.edit.tempoSequence.beatsToTime(currentPosBeats + offset));
-        linkTimeSinceLastPlayheadUpdate = 0;
-        DBG("-----\n link phase " << linkBeatPhase);
-        DBG(" local phase " << localBeatPhase);
-        DBG("---------------------------------------------- PLAYHEAD ADJUST " << offset);
-    }
 
     edit.updateModifierTimers (playhead, streamTime, numSamples);
     midiDispatcher.nextBlockStarted (playhead, streamTime, numSamples);
