@@ -18,6 +18,8 @@ public:
 
     double getBpm();
 
+    void setBpm(double newBpm);
+
     double getBeat();
 
     double getPhase();
@@ -32,10 +34,6 @@ public:
         bool startstop_sync;
         JUCE_LEAK_DETECTOR(EngineData)
     };
-
-
-
-
 
 private :
 

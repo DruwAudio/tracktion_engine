@@ -643,7 +643,6 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
             in->owner.masterTimeUpdate (streamTime.getStart());
 
     midiDispatcher.masterTimeUpdate (playhead, streamTime.getStart());
-
     playhead.deviceManagerPositionUpdate (streamTime.getStart(), streamTime.getEnd());
 
 

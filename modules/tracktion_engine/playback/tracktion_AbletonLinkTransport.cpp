@@ -33,6 +33,11 @@ namespace tracktion_engine
         return currentPhase;
     }
 
+    void AbletonLinkTransport::setBpm(double newBpm)
+    {
+        shared_engine_data.requested_bpm = newBpm;
+    }
+
 
     double AbletonLinkTransport::update()
     {

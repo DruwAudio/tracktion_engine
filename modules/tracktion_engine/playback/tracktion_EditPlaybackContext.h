@@ -75,6 +75,9 @@ public:
         Engine& engine;
     };
 
+
+    AbletonLinkTransport abletonLinkTransport;
+
 private:
     bool isAllocated = false;
 
@@ -114,7 +117,6 @@ private:
 
 #pragma mark - AbletonLinkTransport
 
-    AbletonLinkTransport abletonLinkTransport;
     double linkPlayheadUpdateInterval = 0.5;
     double linkTimeSinceLastPlayheadUpdate = 0;
 
