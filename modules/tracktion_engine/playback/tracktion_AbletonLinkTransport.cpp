@@ -9,6 +9,15 @@ namespace tracktion_engine
 
     }
 
+    bool AbletonLinkTransport::isLinkEnabled()
+    {
+        return link->isEnabled();
+    }
+    void AbletonLinkTransport::enableLink(bool shouldEnable)
+    {
+        link->enable(shouldEnable);
+    }
+
 
     void AbletonLinkTransport::prepareToPlay(double newsampleRate, int newblockSize, double inOutLatencyMs)
     {

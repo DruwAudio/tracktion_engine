@@ -10,6 +10,8 @@ public:
     ~AbletonLinkTransport();
     double currentBpm = 60;
 
+    bool isLinkEnabled();
+    void enableLink(bool shouldEnable);
 
     void prepareToPlay(double newsampleRate, int newblockSize, double inOutLatencyMs);
 
@@ -23,6 +25,8 @@ public:
     double getBeat();
 
     double getPhase();
+
+
 
     /** Data that's passed around between thread */
     struct EngineData
