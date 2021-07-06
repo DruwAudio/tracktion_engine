@@ -26,6 +26,7 @@ public:
 
     double getPhase();
 
+    int getPeersCount();
 
 
     /** Data that's passed around between thread */

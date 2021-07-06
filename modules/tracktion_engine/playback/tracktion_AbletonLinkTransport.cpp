@@ -11,7 +11,10 @@ namespace tracktion_engine
 
     bool AbletonLinkTransport::isLinkEnabled()
     {
-        return link->isEnabled();
+        if (link != nullptr)
+            return link->isEnabled();
+
+        return false;
     }
     void AbletonLinkTransport::enableLink(bool shouldEnable)
     {
@@ -45,6 +48,15 @@ namespace tracktion_engine
     void AbletonLinkTransport::setBpm(double newBpm)
     {
         shared_engine_data.requested_bpm = newBpm;
+    }
+
+    int AbletonLinkTransport::getPeersCount()
+    {
+        if (isLinkEnabled())
+        {
+            return link->numPeers();
+        }
+        return 0;
     }
 
 
