@@ -616,6 +616,7 @@ namespace IDs
     DECLARE_ID (modDecay)
     DECLARE_ID (modSustain)
     DECLARE_ID (modRelease)
+    DECLARE_ID (modAmount)
     DECLARE_ID (modParam)
     DECLARE_ID (modItem)
     DECLARE_ID (modDepth)

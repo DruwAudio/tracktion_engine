@@ -505,8 +505,8 @@ public:
         // Update mod values
         currentModValue[(int)FourOscPlugin::lfo1] = lfo1.getCurrentValue();
         currentModValue[(int)FourOscPlugin::lfo2] = lfo2.getCurrentValue();
-        currentModValue[(int)FourOscPlugin::env1] = modAdsr1.getEnvelopeValue();
-        currentModValue[(int)FourOscPlugin::env2] = modAdsr2.getEnvelopeValue();
+        currentModValue[(int)FourOscPlugin::env1] = modAdsr1.getEnvelopeValue() * synth.modEnvParams[0]->modAmount->getCurrentValue();
+        currentModValue[(int)FourOscPlugin::env2] = modAdsr2.getEnvelopeValue() * synth.modEnvParams[1]->modAmount->getCurrentValue();
 
         currentModValue[FourOscPlugin::mpePressure]   = currentlyPlayingNote.pressure.asUnsignedFloat();
         currentModValue[FourOscPlugin::mpeTimbre]     = currentlyPlayingNote.timbre.asUnsignedFloat();
@@ -854,6 +854,7 @@ FourOscPlugin::MODEnvParams::MODEnvParams (FourOscPlugin& plugin, int modNum)
     modDecayValue.referTo (plugin.state, modID (IDs::modDecay, modNum), um, 0.1f);
     modSustainValue.referTo (plugin.state, modID (IDs::modSustain, modNum), um, 80.0f);
     modReleaseValue.referTo (plugin.state, modID (IDs::modRelease, modNum), um, 0.1f);
+    modAmountValue.referTo (plugin.state, modID (IDs::modAmount, modNum), um, 1.0);
 
     auto paramID = [] (Identifier i, int num)
     {
@@ -864,6 +865,7 @@ FourOscPlugin::MODEnvParams::MODEnvParams (FourOscPlugin& plugin, int modNum)
     modDecay    = plugin.addParam (paramID (IDs::modDecay, modNum),   TRANS("Mod Decay") + " " + String (modNum),   {0.0f, 60.0f, 0.0f, 0.2f});
     modSustain  = plugin.addParam (paramID (IDs::modSustain, modNum), TRANS("Mod Sustain") + " " + String (modNum), {0.0f,   100.0f}, "%");
     modRelease  = plugin.addParam (paramID (IDs::modRelease, modNum), TRANS("Mod Release") + " " + String (modNum), {0.001f, 60.0f, 0.0f, 0.2f});
+    modAmount   = plugin.addParam (paramID (IDs::modAmount, modNum),  TRANS("Mod Amount") + " " + String (modNum),  {-1.0f, 1.0f});
 }
 
 void FourOscPlugin::MODEnvParams::attach()
@@ -872,6 +874,7 @@ void FourOscPlugin::MODEnvParams::attach()
     modDecay->attachToCurrentValue (modDecayValue);
     modSustain->attachToCurrentValue (modSustainValue);
     modRelease->attachToCurrentValue (modReleaseValue);
+    modAmount->attachToCurrentValue (modAmountValue);
 }
 
 void FourOscPlugin::MODEnvParams::detach()
@@ -880,6 +883,7 @@ void FourOscPlugin::MODEnvParams::detach()
     modDecay->detachFromCurrentValue();
     modSustain->detachFromCurrentValue();
     modRelease->detachFromCurrentValue();
+    modAmount->detachFromCurrentValue();
 }
 
 //==============================================================================

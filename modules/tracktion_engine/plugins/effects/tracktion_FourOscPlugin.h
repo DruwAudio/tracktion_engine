@@ -264,12 +264,12 @@ public:
         void attach();
         void detach();
 
-        juce::CachedValue<float> modAttackValue, modDecayValue, modSustainValue, modReleaseValue;
-        AutomatableParameter::Ptr modAttack, modDecay, modSustain, modRelease;
+        juce::CachedValue<float> modAttackValue, modDecayValue, modSustainValue, modReleaseValue, modAmountValue;
+        AutomatableParameter::Ptr modAttack, modDecay, modSustain, modRelease, modAmount;
 
         void restorePluginStateFromValueTree (const juce::ValueTree& v)
         {
-            juce::CachedValue<float>* cvsFloat[]  = { &modAttackValue, &modDecayValue, &modSustainValue, &modReleaseValue, nullptr };
+            juce::CachedValue<float>* cvsFloat[]  = { &modAttackValue, &modDecayValue, &modSustainValue, &modReleaseValue, &modAmountValue, nullptr };
 
             copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
         }
